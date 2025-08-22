@@ -41,12 +41,12 @@ const (
 	DarwinOS = "darwin"
 )
 
-// GetIPer
-type GetIPer interface {
+// Commander
+type Commander interface {
 	GetIP(string) ([]net.IP, error)
 }
 
-// Windows 实现 GetIPer 接口
+// Windows 实现 Commander 接口
 type Windows struct {
 }
 
@@ -59,7 +59,7 @@ func (w *Windows) GetIP(command string) (ips []net.IP, err error) {
 	return ExecuteCommand(cmd)
 }
 
-// Linux 实现 GetIPer 接口
+// Linux 实现 Commander 接口
 type Linux struct {
 }
 
@@ -72,7 +72,7 @@ func (l *Linux) GetIP(command string) (ips []net.IP, err error) {
 	return ExecuteCommand(cmd)
 }
 
-// Darwin 实现 GetIPer 接口
+// Darwin 实现 Commander 接口
 type Darwin struct {
 }
 
@@ -107,7 +107,7 @@ func ExecuteCommand(cmd *exec.Cmd) (ips []net.IP, err error) {
 	return
 }
 
-func NewGetIPer() GetIPer {
+func NewCommander() Commander {
 	switch runtime.GOOS {
 	case WindowsOS:
 		return &Windows{}
@@ -121,12 +121,12 @@ func NewGetIPer() GetIPer {
 }
 
 func main() {
-	getIPer := NewGetIPer()
-	if getIPer == nil {
+	Commander := NewCommander()
+	if Commander == nil {
 		fmt.Println("not support os")
 		return
 	}
-	ips, err := getIPer.GetIP("ip -6 route | awk '/240:?/' |awk '{print $2}'")
+	ips, err := Commander.GetIP("ifconfig | awk '/240:?/' |awk '{print $2}'")
 	if err != nil {
 		fmt.Println(err)
 		return
