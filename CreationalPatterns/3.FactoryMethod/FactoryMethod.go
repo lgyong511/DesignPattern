@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"os/exec"
-	"runtime"
 	"strings"
 )
 
@@ -141,45 +140,20 @@ func ExecuteCommand(cmd *exec.Cmd) (ips []net.IP, err error) {
 }
 
 func main() {
-	var commander Commander
-	switch runtime.GOOS {
-	case WindowsOS:
-		// windows工厂
-		commander = new(WindowsFactory).CreateCommand()
-	case LinuxOS:
-		// linux工厂
-		commander = new(LinuxFactory).CreateCommand()
-		// linux命令
-	case DarwinOS:
-		// darwin工厂
-		commander = new(DarwinFactory).CreateCommand()
-	}
-
-	fmt.Println(commander.Execute("ifconfig | awk '/240:?/' |awk '{print $2}'"))
-
 	// // windows命令
 	// windowsCommand := `Get-NetRoute -AddressFamily IPv6 | Where-Object { $_.DestinationPrefix.StartsWith("240") -and $_.DestinationPrefix.endsWith("/64") } | ForEach-Object { ($_.DestinationPrefix -split '::/')[0] + ":suffix of other mac" }`
 	// // linux命令
 	// linuxCommand := `ip -6 route | awk '{print $1}' | awk '/240:?/' | awk -F:: '{print $1 ":9209:d0ff:fe09:781d"}'`
 	// // darwin命令
 	// darwinCommand := `ifconfig | awk '/240:?/' |awk '{print $2}'`
-	// // windows执行命令
-	// windowsIPs, err := UseCommander(windowsFactory, windowsCommand)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// // linux执行命令
-	// linuxIPs, err := UseCommander(linuxFactory, linuxCommand)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// // darwin执行命令
-	// darwinIPs, err := UseCommander(darwinFactory, darwinCommand)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// // 打印结果
-	// fmt.Println("windowsIPs:", windowsIPs)
-	// fmt.Println("linuxIPs:", linuxIPs)
-	// fmt.Println("darwinIPs:", darwinIPs)
+
+	darwinFactory := &DarwinFactory{}
+	ips, err := UseCommander(darwinFactory, "ifconfig | awk '/240:?/' |awk '{print $2}'")
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, ip := range ips {
+		fmt.Println(ip)
+	}
+
 }
