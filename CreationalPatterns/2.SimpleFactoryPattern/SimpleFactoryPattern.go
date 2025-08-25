@@ -41,12 +41,12 @@ const (
 	DarwinOS = "darwin"
 )
 
-// Commander
+// Commander 产品接口
 type Commander interface {
 	GetIP(string) ([]net.IP, error)
 }
 
-// Windows 实现 Commander 接口
+// Windows 产品：实现 Commander 接口
 type Windows struct {
 }
 
@@ -59,7 +59,7 @@ func (w *Windows) GetIP(command string) (ips []net.IP, err error) {
 	return ExecuteCommand(cmd)
 }
 
-// Linux 实现 Commander 接口
+// Linux 产品：实现 Commander 接口
 type Linux struct {
 }
 
@@ -72,7 +72,7 @@ func (l *Linux) GetIP(command string) (ips []net.IP, err error) {
 	return ExecuteCommand(cmd)
 }
 
-// Darwin 实现 Commander 接口
+// Darwin 产品：实现 Commander 接口
 type Darwin struct {
 }
 
@@ -107,6 +107,7 @@ func ExecuteCommand(cmd *exec.Cmd) (ips []net.IP, err error) {
 	return
 }
 
+// 创建产品函数：根据操作系统类型创建对应的产品
 func NewCommander() Commander {
 	switch runtime.GOOS {
 	case WindowsOS:

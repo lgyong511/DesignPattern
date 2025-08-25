@@ -42,11 +42,12 @@ const (
 	DarwinOS = "darwin"
 )
 
+// Commander 产品接口
 type Commander interface {
 	Execute(string) ([]net.IP, error)
 }
 
-// CommandW windows类
+// CommandW 产品：windows类
 type CommandW struct {
 }
 
@@ -58,7 +59,7 @@ func (c *CommandW) Execute(command string) ([]net.IP, error) {
 	return ExecuteCommand(cmd)
 }
 
-// CommandL linux类
+// CommandL 产品：linux类
 type CommandL struct {
 }
 
@@ -70,7 +71,7 @@ func (c *CommandL) Execute(command string) ([]net.IP, error) {
 	return ExecuteCommand(cmd)
 }
 
-// CommandD darwin类
+// CommandD 产品：darwin类
 type CommandD struct {
 }
 

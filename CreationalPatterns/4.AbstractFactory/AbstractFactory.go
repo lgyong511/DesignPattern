@@ -20,12 +20,12 @@ import "fmt"
 
 */
 
-// 数据库连接器
+// DBConnecter 产品A，接口
 type DBConnecter interface {
 	Connect() string
 }
 
-// 数据库命令执行器
+// DBCommander 产品B，接口
 type DBCommander interface {
 	Command(string) string
 }
