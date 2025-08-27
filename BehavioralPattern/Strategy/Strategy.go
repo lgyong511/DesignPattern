@@ -41,7 +41,7 @@ func (l *Linux) Execute(command string) ([]byte, error) {
 	if command == "" {
 		return nil, ErrParamsEmpty
 	}
-	return exec.Command("bash", "-c", command).Output()
+	return exec.Command("sh", "-c", command).Output()
 }
 
 // darwin 具体策略darwin（MAC）执行命令
