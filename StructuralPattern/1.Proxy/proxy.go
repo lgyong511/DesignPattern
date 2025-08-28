@@ -27,7 +27,7 @@ type RealCommand struct {
 }
 
 func (r *RealCommand) Execute(cmd string) (string, error) {
-	return "执行命令" + cmd, nil
+	return "真实对象执行命令" + cmd, nil
 }
 
 // 代理对象
@@ -36,16 +36,20 @@ type ProxyCommand struct {
 }
 
 func (p *ProxyCommand) Execute(cmd string) (string, error) {
+	if p.realCommand == nil {
+		// 延迟加载
+		fmt.Println("延迟加载真实对象")
+		p.realCommand = &RealCommand{}
+	}
 	// 可以添加一些额外的逻辑
-	fmt.Println("代理对象执行命令")
+	fmt.Println("代理对象执行命令前")
 	result, err := p.realCommand.Execute(cmd)
-	fmt.Println("代理对象执行命令完成")
+	fmt.Println("代理对象执行命令完成后")
 	return result, err
 }
 
 func main() {
-	realCommand := &RealCommand{}
-	proxyCommand := &ProxyCommand{realCommand: realCommand}
+	proxyCommand := &ProxyCommand{}
 	result, err := proxyCommand.Execute("ls")
 	if err != nil {
 		fmt.Println(err)
